@@ -23,6 +23,7 @@ public class Server {
             ClientSocket clientSocket = new ClientSocket(serverSocket.accept());
             clients.add(clientSocket);
             new Thread(() -> clientMessageLoop(clientSocket)).start();
+//            System.out.println("Mensagem recebida do cliente" + clientSocket.getRemoteSocketAddress() + ": " + clientSocket.getMessage());
         }
     }
 
@@ -32,8 +33,7 @@ public class Server {
             while ((msg = clientSocket.getMessage()) != null) {
                 if ("sair".equalsIgnoreCase(msg))
                     return;
-
-                System.out.println("msg recebida do cliente de " + clientSocket.getRemoteSocketAddress() + " : " + msg);
+                System.out.println("Msg recebida do cliente " + clientSocket.getRemoteSocketAddress() + " : " + msg);
                 sendMsgToAll(clientSocket, msg);
             }
         } finally {

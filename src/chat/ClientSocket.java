@@ -12,6 +12,7 @@ public class ClientSocket {
 
     public ClientSocket(Socket socket) throws IOException {
         this.socket = socket;
+        System.out.println("Cliete " + socket.getRemoteSocketAddress() + "conectou");
         this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         this.out = new PrintWriter(socket.getOutputStream(), true);
     }
@@ -39,7 +40,7 @@ public class ClientSocket {
             out.close();
             socket.close();
         } catch (IOException e) {
-            System.out.println("erro close");
+            System.out.println("Erro close");
         }
     }
 }

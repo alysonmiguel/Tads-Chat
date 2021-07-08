@@ -32,17 +32,17 @@ public class Client implements Runnable{
     public void run() {
         String msg;
         while ((msg = clientSocket.getMessage()) != null) {
-            System.out.println("Mensagem recebida do servidor " + msg);
+            System.out.println(msg);
         }
     }
 
     private void messageLoop() throws IOException {
         String msg;
         do {
-            System.out.println("Digite uma mensagem (ou /exit para sair)");
+            System.out.print("Digite uma mensagem (ou /exit para sair) \n");
             msg = scanner.nextLine();
             clientSocket.sendMsg(msg);
-            System.out.println("Mensagem recebida" + clientSocket.getMessage());
+//            System.out.println("Mensagem recebida" + clientSocket.getMessage());
         } while (!msg.equalsIgnoreCase("sair"));
     }
     public static void main(String[] args) {
