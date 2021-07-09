@@ -32,8 +32,10 @@ public class Server {
         String msg;
         try {
             while ((msg = clientSocket.getMessage()) != null) { // atribui o valor a variável msg e tbm verifica se o valor n foi lido -- null
-                if ("/exit".equalsIgnoreCase(msg)) // verifica se o cliente quer finalizar a sessão
+                if ("/exit".equalsIgnoreCase(msg)) { // verifica se o cliente quer finalizar a sessão
+                    sendMsgToAll(clientSocket, ": Saiu" );
                     return;
+                }
                 System.out.println("Msg recebida do cliente " + clientSocket.getRemoteSocketAddress() + " : " + msg);
                 sendMsgToAll(clientSocket, msg); //envia a msg para todos os clientes ativos
             }
