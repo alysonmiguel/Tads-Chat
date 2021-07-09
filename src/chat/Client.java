@@ -6,11 +6,10 @@ import java.util.Scanner;
 
 public class Client implements Runnable{
 
-    private Socket socket;
+    private Socket conexao;
     private final String HOST = "127.0.0.1";
     private final int PORT = 7000;
     private Scanner scanner;
-    public static String nome;
     private ClientSocket clientSocket;
 
     public Client() {
@@ -19,19 +18,19 @@ public class Client implements Runnable{
 
     public void start() throws IOException {
         try{
-            socket = new Socket(HOST, PORT);
-            clientSocket = new ClientSocket(socket);
-            new Thread(this).start();
+            conexao = new Socket(HOST, PORT);
+            clientSocket = new ClientSocket(conexao);
+            new Thread(this).start(); // cria a thread
             messageLoop();
         }finally {
-            socket.close();
+            conexao.close();
         }
     }
 
     @Override
     public void run() {
         String msg;
-        while ((msg = clientSocket.getMessage()) != null) {
+        while ((msg = clientSocket.getMessage()) != null) { // recebe as msg do servidor em um thread separada / pra nao ter bloqueios
             System.out.println(msg);
         }
     }
@@ -40,8 +39,8 @@ public class Client implements Runnable{
         String msg;
         System.out.print("Digite sua mensagem ou /exit para sair quando desejar) \n");
         do {
-            msg = scanner.nextLine();
-            clientSocket.sendMsg(msg);
+            msg = scanner.nextLine(); // le a msg do cliente
+            clientSocket.sendMsg(msg); //
         } while (!msg.equalsIgnoreCase("/exit"));
     }
     public static void main(String[] args) {

@@ -10,7 +10,7 @@ public class Server {
 
     private final int PORT = 7000;
     private ServerSocket serverSocket;
-    private final List<ClientSocket> clients = new LinkedList<>();
+    private final List<ClientSocket> clients = new LinkedList<>(); // lista para add vários clientes
 
     public void start() throws IOException {
         serverSocket = new ServerSocket(PORT);
@@ -20,10 +20,10 @@ public class Server {
 
     private void clientConnectionLoop() throws IOException {
         while (true) {
-            ClientSocket clientSocket = new ClientSocket(serverSocket.accept());
+            ClientSocket clientSocket = new ClientSocket(serverSocket.accept()); //retorna o socket
             clients.add(clientSocket);
             sendMsgToAll(clientSocket, "Entrou no chat");
-            new Thread(() -> clientMessageLoop(clientSocket)).start();
+            new Thread(() -> clientMessageLoop(clientSocket)).start(); 
 //            System.out.println("Mensagem recebida do cliente" + clientSocket.getRemoteSocketAddress() + ": " + clientSocket.getMessage());
         }
     }
@@ -31,24 +31,24 @@ public class Server {
     private void clientMessageLoop(ClientSocket clientSocket) {
         String msg;
         try {
-            while ((msg = clientSocket.getMessage()) != null) {
-                if ("/exit".equalsIgnoreCase(msg))
+            while ((msg = clientSocket.getMessage()) != null) { // atribui o valor a variável msg e tbm verifica se o valor n foi lido -- null
+                if ("/exit".equalsIgnoreCase(msg)) // verifica se o cliente quer finalizar a sessão
                     return;
                 System.out.println("Msg recebida do cliente " + clientSocket.getRemoteSocketAddress() + " : " + msg);
-                sendMsgToAll(clientSocket, msg);
+                sendMsgToAll(clientSocket, msg); //envia a msg para todos os clientes ativos
             }
         } finally {
-            clientSocket.close();
+            clientSocket.close(); // garante que todos os canais sejam fechados
         }
     }
 
     private void sendMsgToAll(ClientSocket sender, String msg) {
-        Iterator<ClientSocket> iterator = clients.iterator();
+        Iterator<ClientSocket> iterator = clients.iterator(); // percorre enquanto tiver elementos
         while (iterator.hasNext()) {
-            ClientSocket clientSocket = iterator.next();
-            if (!sender.equals(clientSocket)) {
+            ClientSocket clientSocket = iterator.next(); // obtem os elementos
+            if (!sender.equals(clientSocket)) { // evita q a msg seja enviada para o remetente
                 if (!clientSocket.sendMsg("["+ sender.getRemoteSocketAddress() + "]"+ " = " + msg)) {
-                    iterator.remove();
+                    iterator.remove(); // remove se nao foi possível enviar a msg
                 }
             }
         }
