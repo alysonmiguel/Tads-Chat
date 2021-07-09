@@ -22,6 +22,7 @@ public class Server {
         while (true) {
             ClientSocket clientSocket = new ClientSocket(serverSocket.accept());
             clients.add(clientSocket);
+            sendMsgToAll(clientSocket, "Entrou no chat");
             new Thread(() -> clientMessageLoop(clientSocket)).start();
 //            System.out.println("Mensagem recebida do cliente" + clientSocket.getRemoteSocketAddress() + ": " + clientSocket.getMessage());
         }
@@ -31,7 +32,7 @@ public class Server {
         String msg;
         try {
             while ((msg = clientSocket.getMessage()) != null) {
-                if ("sair".equalsIgnoreCase(msg))
+                if ("/exit".equalsIgnoreCase(msg))
                     return;
                 System.out.println("Msg recebida do cliente " + clientSocket.getRemoteSocketAddress() + " : " + msg);
                 sendMsgToAll(clientSocket, msg);
@@ -46,7 +47,7 @@ public class Server {
         while (iterator.hasNext()) {
             ClientSocket clientSocket = iterator.next();
             if (!sender.equals(clientSocket)) {
-                if (!clientSocket.sendMsg("Cliente: " + msg)) {
+                if (!clientSocket.sendMsg("["+ sender.getRemoteSocketAddress() + "]"+ " = " + msg)) {
                     iterator.remove();
                 }
             }
@@ -60,7 +61,6 @@ public class Server {
         } catch (IOException e) {
             System.out.println("Erro no servidor :)" + e.getMessage());
         }
-
         System.out.println("Servidor Parou");
     }
 }

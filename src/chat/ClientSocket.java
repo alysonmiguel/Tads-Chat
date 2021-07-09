@@ -3,18 +3,20 @@ package chat;
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.util.Scanner;
 
 public class ClientSocket {
 
     private final Socket socket;
     private final BufferedReader in;
     private final PrintWriter out;
+    private String nome;
 
     public ClientSocket(Socket socket) throws IOException {
         this.socket = socket;
-        System.out.println("Cliete " + socket.getRemoteSocketAddress() + "conectou");
         this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         this.out = new PrintWriter(socket.getOutputStream(), true);
+        System.out.println("Cliente conectou ao servidor "+ socket.getRemoteSocketAddress());
     }
 
     public SocketAddress getRemoteSocketAddress(){

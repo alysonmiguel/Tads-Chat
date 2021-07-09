@@ -10,6 +10,7 @@ public class Client implements Runnable{
     private final String HOST = "127.0.0.1";
     private final int PORT = 7000;
     private Scanner scanner;
+    public static String nome;
     private ClientSocket clientSocket;
 
     public Client() {
@@ -20,7 +21,6 @@ public class Client implements Runnable{
         try{
             socket = new Socket(HOST, PORT);
             clientSocket = new ClientSocket(socket);
-            System.out.println("Cliente conectado ao servidor");
             new Thread(this).start();
             messageLoop();
         }finally {
@@ -38,12 +38,11 @@ public class Client implements Runnable{
 
     private void messageLoop() throws IOException {
         String msg;
+        System.out.print("Digite sua mensagem ou /exit para sair quando desejar) \n");
         do {
-            System.out.print("Digite uma mensagem (ou /exit para sair) \n");
             msg = scanner.nextLine();
             clientSocket.sendMsg(msg);
-//            System.out.println("Mensagem recebida" + clientSocket.getMessage());
-        } while (!msg.equalsIgnoreCase("sair"));
+        } while (!msg.equalsIgnoreCase("/exit"));
     }
     public static void main(String[] args) {
         try {
